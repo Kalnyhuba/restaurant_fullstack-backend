@@ -5,6 +5,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.Map;
 
@@ -26,6 +27,8 @@ public interface UserService {
 
     User getUserByUsername(String username);
 
+    User getUserByUsernameOrEmail(String word);
+
     User getCurrentUser();
 
     void saveUser(User user);
@@ -36,7 +39,7 @@ public interface UserService {
 
     String verifyEmail(String token);
 
-    void removeCookies(HttpServlet response);
+    void removeCookies(HttpServletResponse response);
 
     ResponseCookie setCookie(String name, String value, long age, boolean httpOnly, String path);
 }
