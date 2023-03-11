@@ -1,71 +1,42 @@
 package com.restaurant.restaurantbackend.security.role_based_auth.service;
 
-import com.restaurant.restaurantbackend.security.role_based_auth.dao.RoleDao;
-import com.restaurant.restaurantbackend.security.role_based_auth.dao.UserDao;
-import com.restaurant.restaurantbackend.security.role_based_auth.entity.Role;
 import com.restaurant.restaurantbackend.security.role_based_auth.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.GrantedAuthority;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.servlet.http.HttpServlet;
+import java.util.Collection;
+import java.util.Map;
 
+public interface UserService {
 
-@Service
-public class UserService {
+    Map<String, String> signIn(String username, String password, String refreshToken);
 
-    @Autowired
-    private UserDao userDao;
+    String signUp(User user);
 
-    @Autowired
-    private RoleDao roleDao;
+    Map<String, String> refresh(String refreshToken);
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    String signOut(String refreshToken);
 
-    public User registerNewUser(User user) {
-        Role role = roleDao.findById("User").get();
-        Set<Role> roles = new HashSet<>();
-        roles.add(role);
-        user.setRoles(roles);
-        user.setPassword(getEncodedPassword(user.getPassword()));
-        return userDao.save(user);
-    }
+    String getCurrentUsername();
 
-    public void initRolesAndUser() {
-        Role adminRole = new Role();
-        adminRole.setRole("Admin");
-        adminRole.setDescription("Admin role");
-        roleDao.save(adminRole);
+    Collection<? extends GrantedAuthority> getCurrentUserAuthorities();
 
-        Role userRole = new Role();
-        userRole.setRole("User");
-        userRole.setDescription("Role for new and existing users");
-        roleDao.save(userRole);
+    Integer getCurrentUserId();
 
-        User adminUser = new User();
-        adminUser.setFirstName("System");
-        adminUser.setLastName("Administrator");
-        adminUser.setUsername("sysadmin");
-        adminUser.setPassword(getEncodedPassword("admin123"));
-        Set<Role> adminRoles = new HashSet<>();
-        adminRoles.add(adminRole);
-        adminUser.setRoles(adminRoles);
-        userDao.save(adminUser);
+    User getUserByUsername(String username);
 
-        /*User user = new User();
-        user.setFirstName("Test");
-        user.setLastName("User");
-        user.setUsername("testuser1");
-        user.setPassword(getEncodedPassword("test123"));
-        Set<Role> userRoles = new HashSet<>();
-        userRoles.add(userRole);
-        user.setRoles(userRoles);
-        userDao.save(user);*/
-    }
+    User getCurrentUser();
 
-    public String getEncodedPassword(String password) {
-        return passwordEncoder.encode(password);
-    }
+    void saveUser(User user);
+
+    String recoverPassword(String email);
+
+    String resetPassword(String token, String password);
+
+    String verifyEmail(String token);
+
+    void removeCookies(HttpServlet response);
+
+    ResponseCookie setCookie(String name, String value, long age, boolean httpOnly, String path);
 }

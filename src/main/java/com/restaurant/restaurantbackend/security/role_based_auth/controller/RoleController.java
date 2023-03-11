@@ -1,7 +1,6 @@
 package com.restaurant.restaurantbackend.security.role_based_auth.controller;
 
 import com.restaurant.restaurantbackend.security.role_based_auth.entity.Role;
-import com.restaurant.restaurantbackend.security.role_based_auth.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

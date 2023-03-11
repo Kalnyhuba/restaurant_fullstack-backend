@@ -1,19 +1,14 @@
 package com.restaurant.restaurantbackend.security.role_based_auth.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+public enum Role implements GrantedAuthority {
 
-@Entity
-@Getter
-@Setter
-public class Role {
-    @Id
-    @Column(nullable = false)
-    private String role;
+    ADMIN,
+    CLIENT;
 
-    private String description;
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }
