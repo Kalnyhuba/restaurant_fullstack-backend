@@ -3,6 +3,7 @@ package com.restaurant.restaurantbackend.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +31,7 @@ public class JwtUtil {
 
     private final String secret;
 
+    @Autowired
     public JwtUtil() {
         secret = Base64.getEncoder().encodeToString(generateRandomString(32).getBytes());
     }

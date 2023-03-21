@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -73,12 +74,12 @@ public class UserController {
         return new ResponseMessage(userService.verifyEmail(token));
     }
 
-    @PostMapping("/user/current_username")
+    @GetMapping ("/user/current_username")
     public ResponseMessage getCurrentUsername() {
         return new ResponseMessage(userService.getCurrentUsername());
     }
 
-    @PostMapping("/user/current_user_authorities")
+    @GetMapping("/user/current_user_authorities")
     public ResponseMessage getCurrentUserAuthorities() {
         try {
             return new ResponseMessage(objectMapper.writeValueAsString(userService.getCurrentUserAuthorities()));
@@ -107,7 +108,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user/auth/logout")
+    @GetMapping("/user/auth/logout")
     public ResponseMessage logout(HttpServletRequest request, HttpServletResponse response) {
         try {
             String refreshToken = request.getCookies() != null ? Arrays.stream(request.getCookies())

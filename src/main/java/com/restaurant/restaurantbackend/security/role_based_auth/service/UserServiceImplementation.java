@@ -16,6 +16,9 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,6 +38,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,6 +63,10 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     private final RefreshTokenProvider refreshTokenProvider;
 
     private final EmailService emailService;
+
+    private String verifyEmailTemplate;
+
+    private String forgotPasswordTemplate;
 
     private final EmailValidator emailValidator = EmailValidator.getInstance();
 
@@ -82,8 +93,15 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
             admin.setVerified(true);
             this.userRepository.save(admin);
         }
-
-        // TODO TEMPLATES!!
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        Resource verifyEmailTemplateResource = resourceLoader.getResource("classpath:templates/VerifyEmailTemplate.html");
+        Resource forgotPasswordTemplateResource = resourceLoader.getResource("classpath:templates/ForgotPasswordTemplate.html");
+        try {
+            Reader verifyEmailTemplateReader = new InputStreamReader(verifyEmailTemplateResource.getInputStream(), StandardCharsets.UTF_8);
+            Reader forgotPasswordTemplateReader = new InputStreamReader(forgotPasswordTemplateResource.getInputStream(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -165,7 +183,11 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         String line2 = "Az alábbi linken tudja megerősíteni e-mail címét:";
         String line3 = "E-mail cím megerősítése";
         line1 = line1.replace("[USERNAME]", user.getUsername());
-        // TODO template!
+        String emailBody = verifyEmailTemplate
+                .replace("[LINE_1]", line1)
+                .replace("[LINE_2]", line2)
+                .replace("[LINE_3]", line3)
+                .replace("[TOKEN]", token);
         emailService.sendMessage(user.getEmail(), subject, emailBody, List.of());
     }
 
@@ -274,7 +296,10 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         String subject = "Jelszó visszaállítás";
         String line1 = "Jelszava visszaállításához kattintson az alábbi linkre:";
         String line2 = "Jelszó visszaállítás";
-        // TODO TEMPLATE!
+        String emailBody = forgotPasswordTemplate
+                .replace("[LINE_1]", line1)
+                .replace("[LINE_2]", line2)
+                .replace("[TOKEN]", token);
         emailService.sendMessage(user.getEmail(), subject, emailBody, List.of());
     }
 
