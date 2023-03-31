@@ -13,6 +13,7 @@ import com.restaurant.restaurantbackend.security.role_based_auth.token.entity.To
 import com.restaurant.restaurantbackend.security.role_based_auth.token.entity.TokenKey;
 import com.restaurant.restaurantbackend.security.role_based_auth.token.repository.TokenRepository;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +100,8 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         try {
             Reader verifyEmailTemplateReader = new InputStreamReader(verifyEmailTemplateResource.getInputStream(), StandardCharsets.UTF_8);
             Reader forgotPasswordTemplateReader = new InputStreamReader(forgotPasswordTemplateResource.getInputStream(), StandardCharsets.UTF_8);
+            verifyEmailTemplate = IOUtils.toString(verifyEmailTemplateReader);
+            forgotPasswordTemplate = IOUtils.toString(forgotPasswordTemplateReader);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -134,7 +137,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         } catch (AuthenticationServiceException e) {
             throw e;
         } catch (AuthenticationException e) {
-            throw new CustomException("Invalod credentials", HttpStatus.UNAUTHORIZED);
+            throw new CustomException("Invalid credentials", HttpStatus.UNAUTHORIZED);
         } catch (JsonProcessingException e) {
             throw new CustomException("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -33,7 +33,7 @@ public class JwtUtil {
 
     @Autowired
     public JwtUtil() {
-        secret = Base64.getEncoder().encodeToString(generateRandomString(32).getBytes());
+        secret = Base64.getEncoder().encodeToString("test_secret".getBytes());
     }
 
     public String generateRandomString(int length) {
