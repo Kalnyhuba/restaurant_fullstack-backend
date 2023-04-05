@@ -1,4 +1,4 @@
-package com.restaurant.restaurantbackend.admin.entity;
+package com.restaurant.restaurantbackend.main_features.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

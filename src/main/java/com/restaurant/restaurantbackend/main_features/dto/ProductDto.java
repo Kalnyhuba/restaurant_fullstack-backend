@@ -1,4 +1,4 @@
-package com.restaurant.restaurantbackend.admin.dto;
+package com.restaurant.restaurantbackend.main_features.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
