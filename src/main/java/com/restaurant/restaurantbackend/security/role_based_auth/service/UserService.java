@@ -2,7 +2,9 @@ package com.restaurant.restaurantbackend.security.role_based_auth.service;
 
 import com.restaurant.restaurantbackend.security.role_based_auth.entity.User;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +21,10 @@ public interface UserService {
 
     String signOut(String refreshToken);
 
-    String getCurrentUsername();
+    static String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
+    }
 
     Collection<? extends GrantedAuthority> getCurrentUserAuthorities();
 

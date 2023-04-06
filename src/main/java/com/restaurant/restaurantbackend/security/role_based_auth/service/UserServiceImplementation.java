@@ -197,7 +197,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Override
     public Map<String, String> refresh(String refreshToken) {
         try {
-            String username = getCurrentUsername();
+            String username = UserService.getCurrentUsername();
             Collection<? extends GrantedAuthority> roles = getCurrentUserAuthorities();
             Date absoluteValidity = refreshTokenProvider.getAbsoluteExpirationDateFromToken(refreshToken);
             long loginId = refreshTokenProvider.getLoginIdFromToken(refreshToken);
@@ -210,11 +210,6 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         }
     }
 
-    @Override
-    public String getCurrentUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getName();
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getCurrentUserAuthorities() {
@@ -224,7 +219,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 
     @Override
     public Integer getCurrentUserId() {
-        return userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new CustomException("User not found", HttpStatus.BAD_REQUEST)).getId();
+        return userRepository.findByUsername(UserService.getCurrentUsername()).orElseThrow(() -> new CustomException("User not found", HttpStatus.BAD_REQUEST)).getId();
     }
 
     @Override
@@ -250,7 +245,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 
     @Override
     public User getCurrentUser() {
-        Optional<User> user = userRepository.findByUsername(getCurrentUsername());
+        Optional<User> user = userRepository.findByUsername(UserService.getCurrentUsername());
         if (user.isEmpty()) {
             throw new CustomException("User not found", HttpStatus.BAD_REQUEST);
         }
@@ -265,7 +260,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Override
     public String signOut(String refreshToken) {
         try {
-            refreshTokenProvider.invalidateUserTokenWithLoginId(getCurrentUsername(), refreshToken);
+            refreshTokenProvider.invalidateUserTokenWithLoginId(UserService.getCurrentUsername(), refreshToken);
             SecurityContextHolder.clearContext();
             return "Logout successful";
         } catch (Exception e) {

@@ -76,7 +76,7 @@ public class UserController {
 
     @GetMapping ("/user/current_username")
     public ResponseMessage getCurrentUsername() {
-        return new ResponseMessage(userService.getCurrentUsername());
+        return new ResponseMessage(UserService.getCurrentUsername());
     }
 
     @GetMapping("/user/current_user_authorities")

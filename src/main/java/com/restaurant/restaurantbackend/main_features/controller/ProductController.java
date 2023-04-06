@@ -64,4 +64,9 @@ public class ProductController {
     public List<Product> noCredentialsGetAllProducts(@RequestParam(defaultValue = "") String searchKey) {
         return productService.getAllProducts(searchKey);
     }
+
+    @GetMapping({"/product-details/{isSingleProduct}/{productId}"})
+    public List<Product> getProductDetails(@PathVariable(name = "isSingleProduct") boolean isSingleProduct, @PathVariable(name = "productId") Integer productId) {
+        return productService.getProductDetails(isSingleProduct, productId);
+    }
 }
