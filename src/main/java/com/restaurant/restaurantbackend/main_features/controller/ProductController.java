@@ -50,7 +50,7 @@ public class ProductController {
         return productService.getAllProducts(searchKey);
     }
 
-    @GetMapping({"/admin/get-product-by-id/{id}"})
+    @GetMapping({"/get-product-by-id/{id}"})
     public Product getProductById(@PathVariable("id") Integer id) {
         return productService.getProductById(id);
     }

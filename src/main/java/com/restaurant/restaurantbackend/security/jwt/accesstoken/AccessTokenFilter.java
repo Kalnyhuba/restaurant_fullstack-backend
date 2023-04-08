@@ -26,7 +26,8 @@ public class AccessTokenFilter extends OncePerRequestFilter {
             "/user/forgot_password",
             "/user/reset_password",
             "/user/verify",
-            "/user/auth/refresh"
+            "/user/auth/refresh",
+            "/all-products"
     };
 
     private final AccessTokenProvider accessTokenProvider;

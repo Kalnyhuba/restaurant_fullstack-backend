@@ -39,15 +39,17 @@ public class ProductService {
     }
 
     public List<Product> getProductDetails(boolean isSingleProduct, Integer productId) {
-        if (isSingleProduct) {
+        if (isSingleProduct && productId != 0) {
             List<Product> products = new ArrayList<>();
             Product product = productRepository.findById(productId).get();
             products.add(product);
             return products;
         } else {
-
+            String username = UserService.getCurrentUsername();
+            User user = userRepository.findByUsername(username).get();
+            List<Cart> carts = cartRepository.findByUser(user);
+            return carts.stream().map(Cart::getProduct).collect(Collectors.toList());
         }
-        return new ArrayList<>();
     }
 
     public void deleteProduct(Integer id) {
