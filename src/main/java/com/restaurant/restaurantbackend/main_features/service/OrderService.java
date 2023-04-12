@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -31,26 +32,29 @@ public class OrderService {
     private UserRepository userRepository;
 
     public void placeOrder(OrderInput orderInput, boolean isSingleProduct) {
+        User user = userRepository.findByUsername(UserService.getCurrentUsername()).orElseThrow();
         List<OrderProductQuantity> orderProductQuantityList = orderInput.getOrderProductQuantityList();
-        for (OrderProductQuantity o : orderProductQuantityList) {
-            Product product = productRepository.findById(o.getProductId()).get();
-            String username = UserService.getCurrentUsername();
-            User user = userRepository.findByUsername(username).get();
-            OrderDetails order = new OrderDetails(
-                    orderInput.getFullName(),
-                    orderInput.getFullAddress(),
-                    orderInput.getContactNumber(),
-                    ORDER_PLACED,
-                    product.getPrice() * o.getQuantity(),
-                    product,
-                    user
-            );
-            if (!isSingleProduct) {
-                List<Cart> carts = cartRepository.findByUser(user);
-                carts.stream().forEach(c -> cartRepository.deleteById(c.getId()));
-            }
-            orderRepository.save(order);
+        double totalAmount = 0;
+        List<OrderDetailsItem> orderItems = new ArrayList<>();
+        for (OrderProductQuantity orderProductQuantity : orderProductQuantityList) {
+            Product product = productRepository.findById(orderProductQuantity.getProductId()).orElseThrow();
+            totalAmount += product.getPrice() * orderProductQuantity.getQuantity();
+            orderItems.add(new OrderDetailsItem(product, orderProductQuantity.getQuantity()));
         }
+        OrderDetails order = new OrderDetails(
+                orderInput.getFullName(),
+                orderInput.getFullAddress(),
+                orderInput.getContactNumber(),
+                ORDER_PLACED,
+                totalAmount,
+                orderItems,
+                user
+        );
+        if (!isSingleProduct) {
+            List<CartItem> cartItems = cartRepository.findByUser(user);
+            cartItems.forEach(c -> cartRepository.deleteById(c.getId()));
+        }
+        orderRepository.save(order);
     }
 
     public List<OrderDetails> getOrderDetails() {

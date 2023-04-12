@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,19 +34,19 @@ public class OrderDetails {
     @Column(nullable = false)
     private Double amount;
 
-    @OneToOne
-    private Product product;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<OrderDetailsItem> items;
 
-    @OneToOne
+    @ManyToOne
     private User user;
 
-    public OrderDetails(String fullName, String fullAddress, String contactNumber, String orderStatus, Double amount, Product product, User user) {
+    public OrderDetails(String fullName, String fullAddress, String contactNumber, String orderStatus, Double amount, List<OrderDetailsItem> items, User user) {
         this.fullName = fullName;
         this.fullAddress = fullAddress;
         this.contactNumber = contactNumber;
         this.orderStatus = orderStatus;
         this.amount = amount;
-        this.product = product;
+        this.items = items;
         this.user = user;
     }
 }

@@ -1,6 +1,6 @@
 package com.restaurant.restaurantbackend.main_features.service;
 
-import com.restaurant.restaurantbackend.main_features.entity.Cart;
+import com.restaurant.restaurantbackend.main_features.entity.CartItem;
 import com.restaurant.restaurantbackend.main_features.entity.Product;
 import com.restaurant.restaurantbackend.main_features.repository.CartRepository;
 import com.restaurant.restaurantbackend.main_features.repository.ProductRepository;
@@ -25,26 +25,26 @@ public class CartService {
     @Autowired
     private UserRepository userRepository;
 
-    public Cart addToCart(Integer id) {
+    public CartItem addToCart(Integer id) {
         Product product = productRepository.findById(id).get();
         String username = UserService.getCurrentUsername();
         User user = null;
         if (username != null) {
             user = userRepository.findByUsername(username).get();
         }
-        List<Cart> cartList = cartRepository.findByUser(user);
-        List<Cart> cartFiltered = cartList.stream().filter(c -> c.getProduct().getId() == id).collect(Collectors.toList());
-        if (cartFiltered.size() > 0) {
+        List<CartItem> cartItemList = cartRepository.findByUser(user);
+        List<CartItem> cartItemFiltered = cartItemList.stream().filter(c -> c.getProduct().getId() == id).collect(Collectors.toList());
+        if (cartItemFiltered.size() > 0) {
             return null;
         }
         if (user != null) {
-            Cart cart = new Cart(product, user);
-            return cartRepository.save(cart);
+            CartItem cartItem = new CartItem(product, user);
+            return cartRepository.save(cartItem);
         }
         return null;
     }
 
-    public List<Cart> getCartDetails() {
+    public List<CartItem> getCartDetails() {
         String username = UserService.getCurrentUsername();
         User user = userRepository.findByUsername(username).get();
         return cartRepository.findByUser(user);

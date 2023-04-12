@@ -1,6 +1,6 @@
 package com.restaurant.restaurantbackend.main_features.service;
 
-import com.restaurant.restaurantbackend.main_features.entity.Cart;
+import com.restaurant.restaurantbackend.main_features.entity.CartItem;
 import com.restaurant.restaurantbackend.main_features.entity.Product;
 import com.restaurant.restaurantbackend.main_features.repository.CartRepository;
 import com.restaurant.restaurantbackend.main_features.repository.ProductRepository;
@@ -47,8 +47,8 @@ public class ProductService {
         } else {
             String username = UserService.getCurrentUsername();
             User user = userRepository.findByUsername(username).get();
-            List<Cart> carts = cartRepository.findByUser(user);
-            return carts.stream().map(Cart::getProduct).collect(Collectors.toList());
+            List<CartItem> cartItems = cartRepository.findByUser(user);
+            return cartItems.stream().map(CartItem::getProduct).collect(Collectors.toList());
         }
     }
 

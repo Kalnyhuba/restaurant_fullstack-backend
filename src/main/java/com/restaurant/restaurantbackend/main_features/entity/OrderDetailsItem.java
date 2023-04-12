@@ -1,6 +1,5 @@
 package com.restaurant.restaurantbackend.main_features.entity;
 
-import com.restaurant.restaurantbackend.security.role_based_auth.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,21 +10,22 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Cart {
+public class OrderDetailsItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private Integer id;
 
-    @OneToOne
+    @ManyToOne
     private Product product;
 
-    @OneToOne
-    private User user;
+    @Column(nullable = false)
+    private Integer quantity;
 
-    public Cart(Product product, User user) {
+    public OrderDetailsItem(Product product, Integer quantity) {
         this.product = product;
-        this.user = user;
+        this.quantity = quantity;
     }
+
 }
