@@ -1,5 +1,6 @@
 package com.restaurant.restaurantbackend.main_features.service;
 
+import com.restaurant.restaurantbackend.main_features.dto.OrderDetailsResponseDto;
 import com.restaurant.restaurantbackend.main_features.entity.*;
 import com.restaurant.restaurantbackend.main_features.repository.CartRepository;
 import com.restaurant.restaurantbackend.main_features.repository.OrderDetailsItemRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -62,10 +64,24 @@ public class OrderService {
         orderDetailsItemRepository.saveAll(orderItems);
     }
 
-    public List<OrderDetails> getOrderDetails() {
+    public List<OrderDetailsResponseDto> getOrderDetails() {
         String username = UserService.getCurrentUsername();
         User user = userRepository.findByUsername(username).get();
-        return orderRepository.findByUser(user);
+        return orderRepository.findByUser(user).stream()
+                .map(orderDetails -> {
+                    List<OrderDetailsItem> orderDetailsItems = orderDetailsItemRepository.findAllByOrderDetailsId(orderDetails.getId());
+                    return new OrderDetailsResponseDto(
+                            orderDetails.getId(),
+                            orderDetails.getFullName(),
+                            orderDetails.getFullAddress(),
+                            orderDetails.getContactNumber(),
+                            orderDetails.getOrderStatus(),
+                            orderDetails.getAmount(),
+                            orderDetailsItems,
+                            orderDetails.getUser()
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
     public void deleteAllByProductId(Integer productId) {

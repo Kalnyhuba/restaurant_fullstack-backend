@@ -1,5 +1,6 @@
 package com.restaurant.restaurantbackend.main_features.controller;
 
+import com.restaurant.restaurantbackend.main_features.dto.OrderDetailsResponseDto;
 import com.restaurant.restaurantbackend.main_features.entity.OrderDetails;
 import com.restaurant.restaurantbackend.main_features.entity.OrderInput;
 import com.restaurant.restaurantbackend.main_features.service.OrderService;
@@ -20,7 +21,7 @@ public class OrderController {
     }
 
     @GetMapping({"/get-order-details"})
-    public List<OrderDetails> getOrderDetails() {
+    public List<OrderDetailsResponseDto> getOrderDetails() {
         return orderService.getOrderDetails();
     }
 }
