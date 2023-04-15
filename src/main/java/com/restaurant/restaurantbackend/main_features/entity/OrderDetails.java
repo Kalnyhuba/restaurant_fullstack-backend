@@ -34,19 +34,15 @@ public class OrderDetails {
     @Column(nullable = false)
     private Double amount;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<OrderDetailsItem> items;
-
     @ManyToOne
     private User user;
 
-    public OrderDetails(String fullName, String fullAddress, String contactNumber, String orderStatus, Double amount, List<OrderDetailsItem> items, User user) {
+    public OrderDetails(String fullName, String fullAddress, String contactNumber, String orderStatus, Double amount, User user) {
         this.fullName = fullName;
         this.fullAddress = fullAddress;
         this.contactNumber = contactNumber;
         this.orderStatus = orderStatus;
         this.amount = amount;
-        this.items = items;
         this.user = user;
     }
 }

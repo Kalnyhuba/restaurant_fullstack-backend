@@ -9,6 +9,7 @@ import com.restaurant.restaurantbackend.security.role_based_auth.repository.User
 import com.restaurant.restaurantbackend.security.role_based_auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,9 @@ public class ProductService {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private OrderService orderService;
 
     public Product addNewProduct(Product product) {
         return productRepository.save(product);
@@ -52,7 +56,9 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public void deleteProduct(Integer id) {
+        orderService.deleteAllByProductId(id);
         productRepository.deleteById(id);
     }
 

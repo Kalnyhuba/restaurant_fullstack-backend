@@ -4,5 +4,15 @@
       "name": "spring.sql.init.platform",
       "type": "java.lang.String",
       "description": "Description for spring.sql.init.platform."
-  }
-] }
+    },
+    {
+      "name": "jwt.access.validity",
+      "type": "java.lang.String",
+      "description": "Description for jwt.access.validity."
+    },
+    {
+      "name": "jwt.access.validity",
+      "type": "java.lang.String",
+      "description": "Description for jwt.access.validity."
+    }
+  ] }

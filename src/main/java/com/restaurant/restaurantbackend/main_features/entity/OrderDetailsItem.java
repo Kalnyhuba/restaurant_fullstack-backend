@@ -18,14 +18,17 @@ public class OrderDetailsItem {
     private Integer id;
 
     @ManyToOne
+    private OrderDetails orderDetails;
+
+    @ManyToOne
     private Product product;
 
     @Column(nullable = false)
     private Integer quantity;
 
-    public OrderDetailsItem(Product product, Integer quantity) {
+    public OrderDetailsItem(OrderDetails orderDetails, Product product, Integer quantity) {
+        this.orderDetails = orderDetails;
         this.product = product;
         this.quantity = quantity;
     }
-
 }
